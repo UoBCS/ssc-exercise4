@@ -54,7 +54,7 @@ public class FileTableModel extends AbstractTableModel {
                 value = rowData.getFile();
                 break;
             case 1:
-                value = rowData.getFormattedStatus(); // getStatus
+                value = rowData.getFormattedStatus();
                 break;
             case 2:
                 value = rowData.getProgress();
@@ -87,7 +87,7 @@ public class FileTableModel extends AbstractTableModel {
         fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
     }
 
-    public void updateStatus(String file, int progress) {
+    public void updateProgress(String file, int progress) {
         RowData rowData = mapLookup.get(file);
         
         if (rowData != null) {
@@ -95,6 +95,16 @@ public class FileTableModel extends AbstractTableModel {
             float p = (float) progress / 100f;
             setValueAt(p, row, 2);
             fireTableCellUpdated(row, 2);
+        }
+    }
+    
+    public void updateStatus(String file, int status) {
+    	RowData rowData = mapLookup.get(file);
+        
+        if (rowData != null) {
+            int row = rows.indexOf(rowData);
+            setValueAt(RowData.formatStatus(status), row, 1);
+            fireTableCellUpdated(row, 1);
         }
     }
 	

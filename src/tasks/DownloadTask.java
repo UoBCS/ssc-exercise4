@@ -54,7 +54,7 @@ public class DownloadTask {
 		setDownloadStatus(DOWNLOADING);
 		threadPoolRef = threadPool;
 		
-		DownloadRunnable runnable = new DownloadRunnable(model, url, targetFile); // pass this
+		DownloadRunnable runnable = new DownloadRunnable(model, url, targetFile);
 		result = threadPoolRef.submit(runnable);
 	}
 	

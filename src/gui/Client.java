@@ -96,11 +96,7 @@ public class Client {
 		table = new JTable();
 		table.setModel(model);
 		table.getColumn("Progress").setCellRenderer(new ProgressCellRenderer());
-		
-		//fileListComp = new FileListComponent(fileListModel);
-		//fileListComp.setFillsViewportHeight(true);
-		//fileListModel.addObserver(fileListComp);
-		JScrollPane fileListScrollPnl = new JScrollPane(table); // fileListComp
+		JScrollPane fileListScrollPnl = new JScrollPane(table);
 		frmFileDownloader.getContentPane().add( fileListScrollPnl);
 		fileListScrollPnl.setBounds(12, 270, 776, 290);
 		

@@ -11,8 +11,6 @@ import javax.swing.JTextField;
 
 public class InputComponent extends JPanel {
 	
-	private Client client;
-	
 	public JLabel urlLbl;
 	public JTextField urlTxt;
 	

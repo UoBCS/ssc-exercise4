@@ -1,7 +1,9 @@
 package tasks;
 
 import gui.FileTableModel;
+import gui.RowData;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,40 +40,25 @@ public class DownloadRunnable implements Runnable {
 	@Override
 	public void run() {
 		
-		/*URL urlObj;
-		InputStream is;
-		OutputStream os;
-		
 		try {
-			urlObj = new URL(url);
-			is = urlObj.openStream();
-			os = new FileOutputStream(targetFile);
 			
-			byte[] b = new byte[2048];
-			int length;
-
-			while ((length = is.read(b)) != -1) {
-				os.write(b, 0, length);
-			}
-
-			is.close();
-			os.close();
+			// Set downloading status
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					model.updateStatus(url, RowData.DOWNLOADING);
+				}
+			});
 			
-			
-		}
-		catch (IOException e) {
-			
-		}*/
-		
-		try {
 
             URL urlObj = new URL(url);
             HttpURLConnection httpConnection = (HttpURLConnection) (urlObj.openConnection());
             long completeFileSize = httpConnection.getContentLength();
 
-            java.io.BufferedInputStream in = new java.io.BufferedInputStream(httpConnection.getInputStream());
-            java.io.FileOutputStream fos = new java.io.FileOutputStream(targetFile);
-            java.io.BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
+            BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
+            FileOutputStream fos = new FileOutputStream(targetFile);
+            BufferedOutputStream bout = new BufferedOutputStream(fos, 1024);
             
             byte[] data = new byte[1024];
             long downloadedFileSize = 0;
@@ -79,17 +66,15 @@ public class DownloadRunnable implements Runnable {
             while ((x = in.read(data, 0, 1024)) >= 0) {
                 downloadedFileSize += x;
 
-                // calculate progress
+                // Calculate progress
                 final int currentProgress = (int) ((((double)downloadedFileSize) / ((double)completeFileSize)) * 100);
 
-                // update progress bar
+                // Update progress bar
                 SwingUtilities.invokeLater(new Runnable() {
 
                     @Override
                     public void run() {
-                    	model.updateStatus(url, currentProgress);
-                    	// fileListModel.setProgress(currentProgress, 
-                    	//jProgressBar.setValue(currentProgress);
+                    	model.updateProgress(url, currentProgress);
                     }
                 });
 
@@ -97,12 +82,21 @@ public class DownloadRunnable implements Runnable {
             }
             bout.close();
             in.close();
+            
+            // Set finished status
+            SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					model.updateStatus(url, RowData.FINISHED);
+				}
+			});
         }
 		catch (FileNotFoundException e) {
-			
+			System.out.println(e.getMessage());
         }
 		catch (IOException e) {
-			
+			System.out.println(e.getMessage());
         }
 		
 	}

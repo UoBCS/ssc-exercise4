@@ -1,8 +1,11 @@
 package gui;
 
-import tasks.DownloadTask;
 
 public class RowData {
+	
+	public static final int READY = 1;
+	public static final int DOWNLOADING = 2;
+	public static final int FINISHED = 3;
 	
     private String file;
     private int status;
@@ -10,11 +13,11 @@ public class RowData {
 
     public RowData(String file) {
         this.file = file;
-        this.status = DownloadTask.READY;
+        this.status = READY;
         this.progress = 0f;
     }
 
-    private String formatStatus(int status) {
+    public static String formatStatus(int status) {
 		switch (status) {
 			case 1: return "Not started";
 			case 2: return "Downloading";

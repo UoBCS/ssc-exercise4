@@ -35,8 +35,10 @@ public class ImagesCrawlerWorker extends SwingWorker<ArrayList<String>, String> 
 		Elements elements = doc.getElementsByTag("img"); // ~=(?i)\\.(png|jpe?g)
 		for (Element element : elements) {
 			String link = element.attr("abs:src");
-			images.add(link);
-			publish(link);
+			if (!images.contains(link)) {
+				images.add(link);
+				publish(link);
+			}
 		}
 		
 		return images;
