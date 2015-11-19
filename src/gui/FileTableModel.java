@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class FileTableModel extends AbstractTableModel {
 	
@@ -68,6 +69,11 @@ public class FileTableModel extends AbstractTableModel {
         RowData rowData = rows.get(rowIndex);
         
         switch (columnIndex) {
+        	case 1:
+        		if (aValue instanceof Integer) {
+        			rowData.setStatus((int) aValue);
+        		}
+        		break;
             case 2:
                 if (aValue instanceof Float) {
                     rowData.setProgress((float) aValue);
@@ -75,7 +81,17 @@ public class FileTableModel extends AbstractTableModel {
                 break;
         }
     }
-
+	
+	public void deleteData() {
+        int _rows = getRowCount();
+        if (_rows == 0) {
+            return;
+        }
+        rows.clear();
+        mapLookup.clear();
+        fireTableRowsDeleted(0, _rows - 1);
+    }
+	
 	public ArrayList<RowData> getRows() {
 		return rows;
 	}
@@ -103,7 +119,7 @@ public class FileTableModel extends AbstractTableModel {
         
         if (rowData != null) {
             int row = rows.indexOf(rowData);
-            setValueAt(RowData.formatStatus(status), row, 1);
+            setValueAt(status, row, 1);
             fireTableCellUpdated(row, 1);
         }
     }

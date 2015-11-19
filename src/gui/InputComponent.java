@@ -26,13 +26,13 @@ public class InputComponent extends JPanel {
 	
 	public JButton getFiles;
 	public JButton downloadBtn;
+	public JButton clearBtn;
 	
 	public InputComponent(Client client) {
 		super();
 		
 		// Store reference to use inside anonymous classes
 		InputComponent self = this;
-		this.client = client;
 		
 		// URL
 		urlLbl = new JLabel("Website:");
@@ -85,6 +85,10 @@ public class InputComponent extends JPanel {
 		// Download
 		downloadBtn = new JButton("Download");
 		add(downloadBtn);
+		
+		// Clear
+		clearBtn = new JButton("Clear");
+		add(clearBtn);
 		
 	}
 	

@@ -61,12 +61,15 @@ public class Client {
 		// ---------------
 		
 		inputComp = new InputComponent(this);
+		inputComp.clearBtn.setBackground(SystemColor.text);
+		inputComp.clearBtn.setLocation(495, 195);
+		inputComp.clearBtn.setSize(100, 25);
 		inputComp.threadsTxt.setText("2");
 		inputComp.downloadBtn.setBackground(SystemColor.text);
 		inputComp.getFiles.setBackground(SystemColor.text);
-		inputComp.getFiles.setLocation(261, 195);
+		inputComp.getFiles.setLocation(177, 195);
 		inputComp.getFiles.setSize(100, 25);
-		inputComp.downloadBtn.setLocation(435, 195);
+		inputComp.downloadBtn.setLocation(335, 195);
 		inputComp.downloadBtn.setSize(100, 25);
 		inputComp.downloadBtn.setEnabled(false);
 		inputComp.locationBtn.setBackground(SystemColor.text);
@@ -111,6 +114,7 @@ public class Client {
 				//if (inputComp.urlTxt)
 				
 				// Start worker thread
+				model.deleteData();
 				new ImagesCrawlerWorker(inputComp.urlTxt.getText(), inputComp.filterTxt.getText(), model, inputComp).execute();
 			}
 		});
@@ -125,16 +129,30 @@ public class Client {
 					DownloadManager manager = new DownloadManager(Integer.parseInt(inputComp.threadsTxt.getText()));
 					ArrayList<RowData> rows = model.getRows();
 					
-					for (RowData row : rows) {
-						manager.addDownloadTask(row.getFile(), inputComp.directoryTxt.getText());
+					if (rows.size() == 0) {
+						MessageBox.show("File queue empty", "Warning");
 					}
-					
-					manager.start(model);
+					else {
+						for (RowData row : rows) {
+							manager.addDownloadTask(row.getFile(), inputComp.directoryTxt.getText());
+						}
+						
+						manager.start(model);
+					}
 				}
 				catch (NumberFormatException ex) {
 					System.out.println(ex.getMessage());
 				}
 				
+			}
+		});
+		
+		inputComp.clearBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				model.deleteData();
+				table.setModel(model);
 			}
 		});
 	}

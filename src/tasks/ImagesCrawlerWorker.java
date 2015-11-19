@@ -13,16 +13,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import utils.Utils;
+
 public class ImagesCrawlerWorker extends SwingWorker<ArrayList<String>, String> {
 
 	private String url;
-	private String filter;
+	private String extensionFilter;
 	private FileTableModel model;
 	private InputComponent inputComp;
 	
-	public ImagesCrawlerWorker(String url, String filter, FileTableModel model, InputComponent inputComp) { // FileListModel model, InputComponent inputComp
+	public ImagesCrawlerWorker(String url, String extensionFilter, FileTableModel model, InputComponent inputComp) {
 		this.url = url;
-		this.filter = filter;
+		this.extensionFilter = extensionFilter;
 		this.model = model;
 		this.inputComp = inputComp;
 	}
@@ -32,9 +34,13 @@ public class ImagesCrawlerWorker extends SwingWorker<ArrayList<String>, String> 
 		Document doc = Jsoup.connect(url).get();
 		ArrayList<String> images = new ArrayList<String>();
 		
-		Elements elements = doc.getElementsByTag("img"); // ~=(?i)\\.(png|jpe?g)
+		Elements elements = extensionFilter.isEmpty()
+				? doc.getElementsByTag("img")
+				: doc.select("img[src~=(?i)\\.(" + extensionFilter + ")], a[href~=(?i)\\.(" + extensionFilter + ")]");
+		
 		for (Element element : elements) {
-			String link = element.attr("abs:src");
+			String link = element.tagName() == "img" ? element.attr("abs:src") : element.attr("abs:href");
+			
 			if (!images.contains(link)) {
 				images.add(link);
 				publish(link);
