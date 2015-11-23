@@ -26,6 +26,7 @@ public class InputComponent extends JPanel {
 	
 	public JButton getFiles;
 	public JButton downloadBtn;
+	public JButton cancelBtn;
 	public JButton clearBtn;
 	
 	public InputComponent(Client client) {
@@ -85,6 +86,10 @@ public class InputComponent extends JPanel {
 		// Download
 		downloadBtn = new JButton("Download");
 		add(downloadBtn);
+		
+		// Cancel
+		cancelBtn = new JButton("Cancel");
+		add(cancelBtn);
 		
 		// Clear
 		clearBtn = new JButton("Clear");

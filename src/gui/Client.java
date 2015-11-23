@@ -47,7 +47,7 @@ public class Client {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialise the contents of the frame.
 	 */
 	private void initialize() {
 		frmFileDownloader = new JFrame();
@@ -61,15 +61,18 @@ public class Client {
 		// ---------------
 		
 		inputComp = new InputComponent(this);
+		inputComp.cancelBtn.setBackground(SystemColor.text);
+		inputComp.cancelBtn.setLocation(370, 195);
+		inputComp.cancelBtn.setSize(100, 25);
 		inputComp.clearBtn.setBackground(SystemColor.text);
-		inputComp.clearBtn.setLocation(495, 195);
+		inputComp.clearBtn.setLocation(510, 195);
 		inputComp.clearBtn.setSize(100, 25);
 		inputComp.threadsTxt.setText("2");
 		inputComp.downloadBtn.setBackground(SystemColor.text);
 		inputComp.getFiles.setBackground(SystemColor.text);
-		inputComp.getFiles.setLocation(177, 195);
+		inputComp.getFiles.setLocation(80, 195);
 		inputComp.getFiles.setSize(100, 25);
-		inputComp.downloadBtn.setLocation(335, 195);
+		inputComp.downloadBtn.setLocation(228, 195);
 		inputComp.downloadBtn.setSize(100, 25);
 		inputComp.downloadBtn.setEnabled(false);
 		inputComp.locationBtn.setBackground(SystemColor.text);
@@ -96,6 +99,8 @@ public class Client {
 		// -------------------
 		
 		FileTableModel model = new FileTableModel();
+		DownloadManager manager = new DownloadManager();
+		
 		table = new JTable();
 		table.setModel(model);
 		table.getColumn("Progress").setCellRenderer(new ProgressCellRenderer());
@@ -126,7 +131,7 @@ public class Client {
 				
 				try {
 					// Long running operation (download)
-					DownloadManager manager = new DownloadManager(Integer.parseInt(inputComp.threadsTxt.getText()));
+					manager.createThreadPool(Integer.parseInt(inputComp.threadsTxt.getText()));
 					ArrayList<RowData> rows = model.getRows();
 					
 					if (rows.size() == 0) {
@@ -144,6 +149,14 @@ public class Client {
 					System.out.println(ex.getMessage());
 				}
 				
+			}
+		});
+		
+		inputComp.cancelBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				manager.cancellAllTasks();
 			}
 		});
 		

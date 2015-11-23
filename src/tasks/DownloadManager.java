@@ -3,6 +3,8 @@ package tasks;
 import gui.FileTableModel;
 
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,8 +14,18 @@ public class DownloadManager {
 	private static int ID = 0;
 	private Hashtable<Integer, DownloadTask> downloadTasks = new Hashtable<Integer, DownloadTask>();
 	
+	public DownloadManager() {}
+	
 	public DownloadManager(int threadCount) {
+		createThreadPool(threadCount);
+	}
+	
+	public void createThreadPool(int threadCount) {
 		threadPool = Executors.newFixedThreadPool(threadCount);
+	}
+	
+	public boolean isEmpty() {
+		return downloadTasks.isEmpty();
 	}
 	
 	public DownloadTask addDownloadTask(String url, String directory) {
@@ -30,31 +42,19 @@ public class DownloadManager {
 		return downloadTasks.get(index);
 	}
 	
-	public Boolean isAllTasksFinished() {
-		for (Integer taskID : downloadTasks.keySet()) {
-			if (!isTaskFinished(taskID)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public Boolean isTaskFinished(int taskID) {
-		DownloadTask task = downloadTasks.get(taskID);
-		return task.isFinished();
-	}
-	
-	public void cancelTask(int taskID) {
-		if (downloadTasks.contains(taskID)) {
-			DownloadTask task = downloadTasks.remove(taskID);
+	public void cancelTask(int taskID, boolean defer) {
+		if (downloadTasks.containsKey(taskID)) {
+			DownloadTask task = defer ? downloadTasks.get(taskID) : downloadTasks.remove(taskID);
 			task.cancel();
 		}
 	}
 	
 	public void cancellAllTasks() {
 		for (int taskID : downloadTasks.keySet()) {
-			cancelTask(taskID);
+			cancelTask(taskID, true);
 		}
+		
+		downloadTasks.clear();
 	}
 	
 	public void start(FileTableModel model) {
