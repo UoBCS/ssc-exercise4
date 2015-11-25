@@ -5,13 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
+/**
+ * Table model for list of files to download
+ */
 public class FileTableModel extends AbstractTableModel {
 	
 	private ArrayList<RowData> rows;
 	private Map<String, RowData> mapLookup;
 	
+	/**
+	 * Creates a new FileTableModel object
+	 */
 	public FileTableModel() {
 		rows = new ArrayList<RowData>();
 		mapLookup = new HashMap<String, RowData>();
@@ -82,6 +87,14 @@ public class FileTableModel extends AbstractTableModel {
         }
     }
 	
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+	    return true;
+	}
+	
+	/**
+	 * Delete all data inside the model
+	 */
 	public void deleteData() {
         int _rows = getRowCount();
         if (_rows == 0) {
@@ -92,10 +105,18 @@ public class FileTableModel extends AbstractTableModel {
         fireTableRowsDeleted(0, _rows - 1);
     }
 	
+	/**
+	 * Get the model rows
+	 * @return
+	 */
 	public ArrayList<RowData> getRows() {
 		return rows;
 	}
 	
+	/**
+	 * Adds a file to the model
+	 * @param file URL of the file
+	 */
 	public void addFile(String file) {
         RowData rowData = new RowData(file);
         mapLookup.put(file, rowData);
@@ -103,6 +124,11 @@ public class FileTableModel extends AbstractTableModel {
         fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
     }
 
+	/**
+	 * Updates the progress bar
+	 * @param file The URL of the file
+	 * @param progress The new progress value
+	 */
     public void updateProgress(String file, int progress) {
         RowData rowData = mapLookup.get(file);
         
@@ -114,6 +140,11 @@ public class FileTableModel extends AbstractTableModel {
         }
     }
     
+    /**
+     * Updates the status of a download task
+     * @param file The URL of the file
+     * @param status The new status
+     */
     public void updateStatus(String file, int status) {
     	RowData rowData = mapLookup.get(file);
         

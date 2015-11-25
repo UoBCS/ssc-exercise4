@@ -13,16 +13,24 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import utils.Utils;
-
-public class ImagesCrawlerWorker extends SwingWorker<ArrayList<String>, String> {
+/**
+ * Represents a file crawler
+ */
+public class FileCrawlerWorker extends SwingWorker<ArrayList<String>, String> {
 
 	private String url;
 	private String extensionFilter;
 	private FileTableModel model;
 	private InputComponent inputComp;
 	
-	public ImagesCrawlerWorker(String url, String extensionFilter, FileTableModel model, InputComponent inputComp) {
+	/**
+	 * Creates a new file crawler worker
+	 * @param url The site's URL
+	 * @param extensionFilter The extension filter
+	 * @param model The table's model
+	 * @param inputComp The input section
+	 */
+	public FileCrawlerWorker(String url, String extensionFilter, FileTableModel model, InputComponent inputComp) {
 		this.url = url;
 		this.extensionFilter = extensionFilter;
 		this.model = model;
@@ -31,23 +39,26 @@ public class ImagesCrawlerWorker extends SwingWorker<ArrayList<String>, String> 
 	
 	@Override
 	protected ArrayList<String> doInBackground() throws Exception {
+		// Connect to the site
 		Document doc = Jsoup.connect(url).get();
-		ArrayList<String> images = new ArrayList<String>();
+		ArrayList<String> links = new ArrayList<String>();
 		
+		// Get the elements according to the filter
 		Elements elements = extensionFilter.isEmpty()
-				? doc.getElementsByTag("img")
-				: doc.select("img[src~=(?i)\\.(" + extensionFilter + ")], a[href~=(?i)\\.(" + extensionFilter + ")]");
+				? doc.select("img, a")
+				: doc.select("img[src~=(?i)\\.(" + extensionFilter + ")|(" + extensionFilter + ")], a[href~=(?i)\\.(" + extensionFilter + ")|(" + extensionFilter + ")]");
 		
+		// Get links from matched elements
 		for (Element element : elements) {
 			String link = element.tagName() == "img" ? element.attr("abs:src") : element.attr("abs:href");
 			
-			if (!images.contains(link)) {
-				images.add(link);
+			if (!links.contains(link)) {
+				links.add(link);
 				publish(link);
 			}
 		}
 		
-		return images;
+		return links;
 	}
 	
 	@Override

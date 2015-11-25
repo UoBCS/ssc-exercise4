@@ -9,6 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Represents the input section
+ */
 public class InputComponent extends JPanel {
 	
 	public JLabel urlLbl;
@@ -29,11 +32,15 @@ public class InputComponent extends JPanel {
 	public JButton cancelBtn;
 	public JButton clearBtn;
 	
+	/**
+	 * Creates a new input section object
+	 * @param client The JFrame which will contain this object
+	 */
 	public InputComponent(Client client) {
 		super();
 		
 		// Store reference to use inside anonymous classes
-		InputComponent self = this;
+		final InputComponent self = this;
 		
 		// URL
 		urlLbl = new JLabel("Website:");

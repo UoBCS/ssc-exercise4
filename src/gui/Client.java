@@ -14,7 +14,7 @@ import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
 import tasks.DownloadManager;
-import tasks.ImagesCrawlerWorker;
+import tasks.FileCrawlerWorker;
 
 
 public class Client {
@@ -89,7 +89,7 @@ public class Client {
 		inputComp.setLayout(null);
 		inputComp.directoryTxt.setBounds(80, 98, 420, 25);
 		inputComp.directoryTxt.setColumns(10);
-		JLabel filterExampleLbl = new JLabel("example *.doc;*.ppt for Word docs and PP");
+		JLabel filterExampleLbl = new JLabel("example doc|ppt for Word docs and PP");
 		filterExampleLbl.setForeground(Color.ORANGE);
 		filterExampleLbl.setBounds(520, 66, 244, 15);
 		inputComp.add(filterExampleLbl);
@@ -104,6 +104,7 @@ public class Client {
 		table = new JTable();
 		table.setModel(model);
 		table.getColumn("Progress").setCellRenderer(new ProgressCellRenderer());
+		
 		JScrollPane fileListScrollPnl = new JScrollPane(table);
 		frmFileDownloader.getContentPane().add( fileListScrollPnl);
 		fileListScrollPnl.setBounds(12, 270, 776, 290);
@@ -111,18 +112,28 @@ public class Client {
 		// Event handlers
 		// --------------
 		
+		// Get files
+		// --------
+		
 		inputComp.getFiles.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String url = inputComp.urlTxt.getText();
+				
 				// Sanity checks
-				//if (inputComp.urlTxt)
+				if (url.isEmpty()) {
+					MessageBox.show("Please supply a URL", "Error");
+				}
 				
 				// Start worker thread
 				model.deleteData();
-				new ImagesCrawlerWorker(inputComp.urlTxt.getText(), inputComp.filterTxt.getText(), model, inputComp).execute();
+				new FileCrawlerWorker(url, inputComp.filterTxt.getText(), model, inputComp).execute();
 			}
 		});
+		
+		// Download files
+		// -------------
 		
 		inputComp.downloadBtn.addActionListener(new ActionListener() {
 			
@@ -131,13 +142,23 @@ public class Client {
 				
 				try {
 					// Long running operation (download)
-					manager.createThreadPool(Integer.parseInt(inputComp.threadsTxt.getText()));
+					int threads = Integer.parseInt(inputComp.threadsTxt.getText());
+					
+					if (threads < 2) {
+						MessageBox.show("You must specify more than two threads", "Warning");
+						return;
+					}
+					
+					// Create thread pool
+					manager.createThreadPool(threads);
 					ArrayList<RowData> rows = model.getRows();
 					
+					// Check file queue
 					if (rows.size() == 0) {
 						MessageBox.show("File queue empty", "Warning");
 					}
 					else {
+						// Add download tasks and start 
 						for (RowData row : rows) {
 							manager.addDownloadTask(row.getFile(), inputComp.directoryTxt.getText());
 						}
@@ -146,11 +167,14 @@ public class Client {
 					}
 				}
 				catch (NumberFormatException ex) {
-					System.out.println(ex.getMessage());
+					MessageBox.show("Please input a valid number", "Error");
 				}
 				
 			}
 		});
+		
+		// Cancel all tasks
+		// ----------------
 		
 		inputComp.cancelBtn.addActionListener(new ActionListener() {
 			
@@ -159,6 +183,9 @@ public class Client {
 				manager.cancellAllTasks();
 			}
 		});
+		
+		// Clear table
+		// -----------
 		
 		inputComp.clearBtn.addActionListener(new ActionListener() {
 			
