@@ -76,12 +76,12 @@ public class FileTableModel extends AbstractTableModel {
         switch (columnIndex) {
         	case 1:
         		if (aValue instanceof Integer) {
-        			rowData.setStatus((int) aValue);
+        			rowData.setStatus((Integer) aValue);
         		}
         		break;
             case 2:
                 if (aValue instanceof Float) {
-                    rowData.setProgress((float) aValue);
+                    rowData.setProgress((Float) aValue);
                 }
                 break;
         }

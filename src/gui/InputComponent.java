@@ -58,7 +58,7 @@ public class InputComponent extends JPanel {
 		
 		// Location
 		locationLbl = new JLabel("Save To:");
-		JFileChooser fileChooser = new JFileChooser();
+		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setAcceptAllFileFilterUsed(false);

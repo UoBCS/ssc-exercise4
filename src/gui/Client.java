@@ -98,8 +98,8 @@ public class Client {
 		// File list component
 		// -------------------
 		
-		FileTableModel model = new FileTableModel();
-		DownloadManager manager = new DownloadManager();
+		final FileTableModel model = new FileTableModel();
+		final DownloadManager manager = new DownloadManager();
 		
 		table = new JTable();
 		table.setModel(model);
