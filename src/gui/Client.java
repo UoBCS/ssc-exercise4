@@ -54,6 +54,7 @@ public class Client {
 		frmFileDownloader.getContentPane().setBackground(SystemColor.text);
 		frmFileDownloader.setTitle("File Downloader");
 		frmFileDownloader.setBounds(100, 100, 800, 600);
+		frmFileDownloader.setResizable(false);
 		frmFileDownloader.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmFileDownloader.getContentPane().setLayout(null);
 		
@@ -73,7 +74,7 @@ public class Client {
 		inputComp.getFiles.setLocation(80, 195);
 		inputComp.getFiles.setSize(100, 25);
 		inputComp.downloadBtn.setLocation(228, 195);
-		inputComp.downloadBtn.setSize(100, 25);
+		inputComp.downloadBtn.setSize(110, 25);
 		inputComp.downloadBtn.setEnabled(false);
 		inputComp.locationBtn.setBackground(SystemColor.text);
 		inputComp.threadsTxt.setBounds(80, 140, 86, 25);
@@ -89,7 +90,7 @@ public class Client {
 		inputComp.setLayout(null);
 		inputComp.directoryTxt.setBounds(80, 98, 420, 25);
 		inputComp.directoryTxt.setColumns(10);
-		JLabel filterExampleLbl = new JLabel("example doc|ppt for Word docs and PP");
+		JLabel filterExampleLbl = new JLabel("example doc|ppt");
 		filterExampleLbl.setForeground(Color.ORANGE);
 		filterExampleLbl.setBounds(520, 66, 244, 15);
 		inputComp.add(filterExampleLbl);

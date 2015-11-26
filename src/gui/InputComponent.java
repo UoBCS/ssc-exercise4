@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -62,14 +63,19 @@ public class InputComponent extends JPanel {
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		locationBtn = new JButton("Choose location");
+		locationBtn = new JButton("Choose...");
 		
 		locationBtn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				fileChooser.showOpenDialog(self);
-				directoryTxt.setText(fileChooser.getSelectedFile().toString());
+				
+				File selectedDir = fileChooser.getSelectedFile();
+				
+				if (selectedDir != null) {
+					directoryTxt.setText(selectedDir.toString());
+				}
 			}
 		});
 		

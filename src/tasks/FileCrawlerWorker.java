@@ -2,6 +2,7 @@ package tasks;
 
 import gui.FileTableModel;
 import gui.InputComponent;
+import gui.MessageBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,10 @@ public class FileCrawlerWorker extends SwingWorker<ArrayList<String>, String> {
 				links.add(link);
 				publish(link);
 			}
+		}
+		
+		if (links.isEmpty()) {
+			MessageBox.show("No images or links were found matching your criteria", "Info");
 		}
 		
 		return links;
